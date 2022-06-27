@@ -1,0 +1,47 @@
+@using Assignment.Models.ViewModels
+@model LoginVm
+
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+
+<div class="row">
+    <div class="col-6 offset-3">
+        <h2>Log in to your account account</h2>
+        
+        @if (TempData["Error"] is not null)
+        {
+            <div class="col-12 alert alert-danger">
+                <span>@TempData["Error"]</span>
+            </div>
+        }
+
+        <div class="row">
+            <div class="col-8 offset-2">
+                <form asp-action="Login" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group">
+                        <label asp-for="UserName" class="control-label"></label>
+                        <input asp-for="UserName" class="form-control"/>
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Password" class="control-label"></label>
+                        <input asp-for="Password" class="form-control"/>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mt-2">
+                        <input class="btn btn-outline-success" type="submit" value="Login"/>
+                        <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Index">Cancel</a>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>

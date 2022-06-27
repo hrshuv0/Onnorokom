@@ -59,5 +59,32 @@ public class AuthController : Controller
         TempData["Error"] = "Something wrong, trying again later";
         return View(model);
     }
+
+    [HttpGet]
+    public IActionResult Login()
+    {
+        return View();
+    }
     
+    [HttpPost]
+    public async Task<IActionResult> Login(LoginVm model)
+    {
+        if (!ModelState.IsValid) return View(model);
+        
+        var user = await _userManager.FindByNameAsync(model.UserName);
+
+        if (user is not null)
+        {
+            var checkCredentials = await _userManager.CheckPasswordAsync(user, model.Password);
+            if (checkCredentials)
+            {
+                var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
+                if (result.Succeeded)
+                    return RedirectToAction(nameof(Index), "Home");
+            }
+        }
+        
+        TempData["Error"] = "wrong credentials, please try again";
+        return View(model);
+    }
 }
