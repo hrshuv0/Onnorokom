@@ -1,0 +1,15 @@
+using System.ComponentModel.DataAnnotations;
+
+namespace Assignment.Models;
+
+public class Notice
+{
+    [Key]
+    public int Id { get; set; }
+
+    [Required]
+    public string? Title { get; set; }
+    
+    [Required]
+    public string? Description { get; set; }
+}
