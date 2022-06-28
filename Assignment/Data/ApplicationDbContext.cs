@@ -13,4 +13,5 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<ApplicationUser>? ApplicationUser { get; set; }
     public DbSet<Notice>? Notices { get; set; }
     public DbSet<NoticeDetails>? NoticeDetails { get; set; }
+    public DbSet<Stats>? Stats { get; set; }
 }
