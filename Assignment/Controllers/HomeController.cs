@@ -2,9 +2,11 @@
 using Assignment.Data;
 using Microsoft.AspNetCore.Mvc;
 using Assignment.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Assignment.Controllers;
 
+[Authorize]
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
@@ -34,9 +36,9 @@ public class HomeController : Controller
             select notice).ToList();
 
         var result = new List<Notice>();
-        result.AddRange(unseen);
-        result.AddRange(seen);
-
+        result.AddRange(unseen.DistinctBy(x=>x.NoticeId));
+        result.AddRange(seen.DistinctBy(x=>x.NoticeId));
+        
         return View(result);
     }
 

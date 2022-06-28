@@ -1,4 +1,5 @@
 using Assignment.Data;
+using Assignment.Data.Static;
 using Assignment.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Assignment.Controllers;
 
+[Authorize(Roles = UserRoles.Admin)]
 public class StatsController : Controller
 {
     private readonly ApplicationDbContext _dbContext;

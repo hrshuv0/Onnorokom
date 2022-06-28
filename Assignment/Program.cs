@@ -31,7 +31,12 @@ builder.Services.AddSession();
 builder.Services.AddAuthentication(options => {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 });
-
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Auth/Login"; 
+    options.LogoutPath = "/Auth/logout";
+    options.AccessDeniedPath = "/Auth/AccessDenied";
+});
 
 
 var app = builder.Build();

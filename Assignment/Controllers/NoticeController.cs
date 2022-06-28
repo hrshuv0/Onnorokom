@@ -8,6 +8,7 @@ using Index = Microsoft.EntityFrameworkCore.Metadata.Internal.Index;
 
 namespace Assignment.Controllers;
 
+[Authorize]
 public class NoticeController : Controller
 {
     private readonly ApplicationDbContext _dbContext;
