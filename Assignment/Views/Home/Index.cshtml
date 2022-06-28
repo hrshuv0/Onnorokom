@@ -22,7 +22,7 @@
                   <div class="card-body">
                     <h4 class="card-title">@notice.Title</h4>
                     <p class="card-text">@notice.Description</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                    <a asp-controller="Notice" asp-action="Details" asp-route-id="@notice.NoticeId" class="btn btn-outline-info text-dark" >View</a>
                   </div>
                 </div>
 

@@ -1,4 +1,5 @@
 using Assignment.Data.Static;
+using Assignment.Models;
 using Assignment.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,10 +9,10 @@ namespace Assignment.Controllers;
 
 public class AuthController : Controller
 {
-    private readonly UserManager<IdentityUser> _userManager;
-    private readonly SignInManager<IdentityUser> _signInManager;
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
 
-    public AuthController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+    public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -36,7 +37,7 @@ public class AuthController : Controller
             return View(model);
         }
 
-        var newUser = new IdentityUser()
+        var newUser = new ApplicationUser()
         {
             UserName = model.UserName
         };

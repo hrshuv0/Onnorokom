@@ -1,3 +1,4 @@
+using Assignment.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace Assignment.Data.Static;
@@ -18,12 +19,12 @@ public class SeedData
             await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
 
         // admin
-        var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+        var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
         var admin = await userManager.FindByIdAsync("admin");
         if (admin is null)
         {
-            var adminUser = new IdentityUser()
+            var adminUser = new ApplicationUser()
             {
                 UserName = "admin"
             };
@@ -36,7 +37,7 @@ public class SeedData
         var user = await userManager.FindByIdAsync("user");
         if (user is null)
         {
-            var memberUser = new IdentityUser()
+            var memberUser = new ApplicationUser()
             {
                 UserName = "user"
             };

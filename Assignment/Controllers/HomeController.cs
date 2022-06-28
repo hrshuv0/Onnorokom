@@ -19,7 +19,7 @@ public class HomeController : Controller
     public IActionResult Index()
     {
         var notice = _dbContext.Notices!
-            .OrderByDescending(n => n.Id)
+            .OrderByDescending(n => n.NoticeId)
             .ToList();
         
         return View(notice);

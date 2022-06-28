@@ -4,11 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Assignment.Data;
 
-public class ApplicationDbContext : IdentityDbContext
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
     public ApplicationDbContext(DbContextOptions options) : base(options)
     {
     }
 
+    public DbSet<ApplicationUser>? ApplicationUser { get; set; }
     public DbSet<Notice>? Notices { get; set; }
+    public DbSet<NoticeDetails>? NoticeDetails { get; set; }
 }

@@ -1,0 +1,27 @@
+@model Notice
+
+@{
+    ViewData["Title"] = "Notice";
+}
+
+<div class="row">
+    <div class="col-8 offset-2">
+        
+        <div class="row">
+            <div class="col-6"><h2>@Model.Title</h2></div>
+        </div>
+        
+        <div class="row">
+            <div class="col-6 offset-3">
+                <div class="card m-2 col-4" style="width: 18rem;height: 20rem;background-color: rgba(232,233,234,0.81)">
+                    <div class="card-body">
+                        <p class="card-text">@Model.Description</p>
+                    </div>
+                </div>
+            </div>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-info">Back to list</a>
+        </div>
+
+
+    </div>
+</div>
