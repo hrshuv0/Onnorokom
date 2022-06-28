@@ -87,4 +87,10 @@ public class AuthController : Controller
         TempData["Error"] = "wrong credentials, please try again";
         return View(model);
     }
+
+    public async Task<IActionResult> Logout()
+    {
+        await _signInManager.SignOutAsync();
+        return RedirectToAction(nameof(Index), "Home");
+    }
 }
