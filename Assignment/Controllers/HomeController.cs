@@ -18,11 +18,26 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        var notice = _dbContext.Notices!
-            .OrderByDescending(n => n.NoticeId)
-            .ToList();
+        // var notice = _dbContext.Notices!
+        //     .OrderByDescending(n => n.NoticeId)
+        //     .ToList();
         
-        return View(notice);
+        var unseen = (from notice in _dbContext.Notices
+            where !(from nd in _dbContext.NoticeDetails
+                    select nd.NoticeId)
+                .Contains(notice.NoticeId)
+            select notice).ToList();
+
+        var seen = (from notice in _dbContext.Notices
+            join noticeDetails in _dbContext.NoticeDetails
+                on notice.NoticeId equals noticeDetails.NoticeId
+            select notice).ToList();
+
+        var result = new List<Notice>();
+        result.AddRange(unseen);
+        result.AddRange(seen);
+
+        return View(result);
     }
 
     public IActionResult Privacy()

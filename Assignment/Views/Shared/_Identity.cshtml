@@ -1,4 +1,6 @@
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Assignment.Data.Static
 @inject UserManager<ApplicationUser> _userManager;
 
 @if (!User.Identity.IsAuthenticated)
