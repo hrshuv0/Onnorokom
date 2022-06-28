@@ -1,11 +1,33 @@
-﻿@{
+﻿@model List<Notice>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Onnorokom Notice</h1>
-    
-    <div class="">
-        <a class="btn btn-outline-success" asp-controller="Notice" asp-action="Create">Create notice</a>
+    <div class="row">
+        <h1 class="display-4">Onnorokom Notice</h1>
+
+        <div>
+            <a class="btn btn-outline-success" asp-controller="Notice" asp-action="Create">Create notice</a>
+        </div>
+    </div>
+
+    <div class="mt-2 mx-5">
+        
+        <div class="row">
+            @foreach (var notice in Model)
+            {
+                <div class="card m-2 col-4" style="width: 18rem;height: 20rem;background-color: rgba(232,233,234,0.81)">
+                  <div class="card-body">
+                    <h4 class="card-title">@notice.Title</h4>
+                    <p class="card-text">@notice.Description</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                  </div>
+                </div>
+
+            }
+        </div>
+        
     </div>
 </div>
