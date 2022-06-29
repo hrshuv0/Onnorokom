@@ -12,14 +12,16 @@
         </div>
         
         <div class="row">
-            <div class="col-6 offset-3">
-                <div class="card m-2 col-4" style="width: 18rem;height: 20rem;background-color: rgba(232,233,234,0.81)">
-                    <div class="card-body">
-                        <p class="card-text">@Model.Description</p>
-                    </div>
+            <div class="col">
+                <div class="border border-secondary box-shadow border-2 p-1" style="min-height: 200px">
+                    @Model.Description
                 </div>
             </div>
-            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-info">Back to list</a>
+            <div class="row">
+                <div class="col-4">
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-info mt-2 ">Back to list</a>
+                </div>
+            </div>
         </div>
 
 

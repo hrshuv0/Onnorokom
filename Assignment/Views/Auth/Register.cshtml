@@ -10,6 +10,11 @@
 <div class="row">
     <div class="col-6 offset-3">
         <h2>Register new account</h2>
+        
+        @if (TempData["Error"] is not null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>
+        }
 
 
         <div class="row">
@@ -44,3 +49,10 @@
 
     </div>
 </div>
+
+@section Scripts
+{
+    @{
+        <partial name="_ValidationScriptsPartial"/>
+    }
+}

@@ -1,6 +1,8 @@
 using Assignment.Data;
 using Assignment.Data.Static;
 using Assignment.Models;
+using Assignment.Services;
+using Assignment.Services.IRepository;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +29,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddMemoryCache();
 builder.Services.AddSession();
+
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 
 builder.Services.AddAuthentication(options => {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;

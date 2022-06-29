@@ -13,7 +13,7 @@
         
         @if (TempData["Error"] is not null)
         {
-            <div class="col-12 alert alert-danger">
+            <div class="alert alert-danger">
                 <span>@TempData["Error"]</span>
             </div>
         }
@@ -45,3 +45,10 @@
 
     </div>
 </div>
+
+@section Scripts
+{
+    @{
+        <partial name="_ValidationScriptsPartial"/>
+    }
+}

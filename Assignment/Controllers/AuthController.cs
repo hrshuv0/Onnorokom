@@ -1,7 +1,6 @@
-using Assignment.Data.Static;
-using Assignment.Models;
 using Assignment.Models.ViewModels;
-using Microsoft.AspNetCore.Identity;
+using Assignment.Services.IRepository;
+
 using Microsoft.AspNetCore.Mvc;
 using Index = Microsoft.EntityFrameworkCore.Metadata.Internal.Index;
 
@@ -9,13 +8,11 @@ namespace Assignment.Controllers;
 
 public class AuthController : Controller
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly IAuthRepository _authRepo;
 
-    public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+    public AuthController(IAuthRepository authRepo)
     {
-        _userManager = userManager;
-        _signInManager = signInManager;
+        _authRepo = authRepo;
     }
 
     [HttpGet]
@@ -29,35 +26,14 @@ public class AuthController : Controller
     {
         if (!ModelState.IsValid) return View(model);
 
-        var user = await _userManager.FindByNameAsync(model.UserName);
+        var result = await _authRepo.Register(model);
 
-        if (user is not null)
-        {
-            TempData["Error"] = "User name already exists";
-            return View(model);
-        }
-
-        var newUser = new ApplicationUser()
-        {
-            UserName = model.UserName
-        };
-        var response = await _userManager.CreateAsync(newUser, model.Password);
-
-        if (!response.Succeeded)
-        {
-            TempData["Error"] = "User registration failed";
-            return View(model);
-        }
-            
-        await _userManager.AddToRoleAsync(newUser, UserRoles.User);
-        
-        var result = await _signInManager.PasswordSignInAsync(newUser, model.Password, false, false);
-        if (result.Succeeded)
+        if (result.Status == Status.Success)
         {
             return RedirectToAction(nameof(Index), "Home");
         }
         
-        TempData["Error"] = "Something wrong, trying again later";
+        TempData["Error"] = result.Message;
         return View(model);
     }
 
@@ -71,27 +47,21 @@ public class AuthController : Controller
     public async Task<IActionResult> Login(LoginVm model)
     {
         if (!ModelState.IsValid) return View(model);
-        
-        var user = await _userManager.FindByNameAsync(model.UserName);
 
-        if (user is not null)
+        var result = await _authRepo.Login(model);
+
+        if (result.Status == Status.Success)
         {
-            var checkCredentials = await _userManager.CheckPasswordAsync(user, model.Password);
-            if (checkCredentials)
-            {
-                var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
-                if (result.Succeeded)
-                    return RedirectToAction(nameof(Index), "Home");
-            }
+            return RedirectToAction(nameof(Index), "Home");
         }
-        
-        TempData["Error"] = "wrong credentials, please try again";
+
+        TempData["Error"] = result.Message;
         return View(model);
     }
 
     public async Task<IActionResult> Logout()
     {
-        await _signInManager.SignOutAsync();
+        await _authRepo.Logout();
         return RedirectToAction(nameof(Index), "Home");
     }
     
