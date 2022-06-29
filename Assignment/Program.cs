@@ -31,6 +31,7 @@ builder.Services.AddMemoryCache();
 builder.Services.AddSession();
 
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddScoped<INoticeRepository, NoticeRepository>();
 
 builder.Services.AddAuthentication(options => {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;

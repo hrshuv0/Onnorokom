@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Assignment.Data;
 using Assignment.Models;
+using Assignment.Services.IRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +13,12 @@ namespace Assignment.Controllers;
 public class NoticeController : Controller
 {
     private readonly ApplicationDbContext _dbContext;
+    private readonly INoticeRepository _noticeRepo;
 
-    public NoticeController(ApplicationDbContext dbContext)
+    public NoticeController(ApplicationDbContext dbContext, INoticeRepository noticeRepo)
     {
         _dbContext = dbContext;
+        _noticeRepo = noticeRepo;
     }
 
     [HttpGet]
@@ -30,39 +33,43 @@ public class NoticeController : Controller
         if (!ModelState.IsValid)
             return View(model);
 
-        _dbContext.Notices!.Add(model);
-        await _dbContext.SaveChangesAsync();
+        await _noticeRepo.Create(model);
 
         return RedirectToAction(nameof(Index), "Home");
     }
 
     public async Task<IActionResult> Details(int id)
     {
-        var notice = _dbContext.Notices!
-            .Include(s => s.Details)!
-            .ThenInclude(t => t.ApplicationUser)
-            .FirstOrDefault(x => x.NoticeId == id);
-        
         var uId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-        var user = _dbContext.Users.FirstOrDefault(x => x.Id == uId);
+        
+        
+        // var notice = _dbContext.Notices!
+        //     .Include(s => s.Details)!
+        //     .ThenInclude(t => t.ApplicationUser)
+        //     .FirstOrDefault(x => x.NoticeId == id);
+        //
+        //
+        // var user = _dbContext.Users.FirstOrDefault(x => x.Id == uId);
+        //
+        // var userExists = notice.Details.FirstOrDefault(x => x.ApplicationUser.Id == uId);
+        // if (userExists is null)
+        // {
+        //     notice.Details.Add(new NoticeDetails()
+        //     {
+        //         ApplicationUser = user,
+        //         NoticeId = id,
+        //         HitCount = 1
+        //     });
+        // }
+        // else
+        // {
+        //     userExists.HitCount += 1;
+        // }
+        //
+        // await _dbContext.SaveChangesAsync();
 
-        var userExists = notice.Details.FirstOrDefault(x => x.ApplicationUser.Id == uId);
-        if (userExists is null)
-        {
-            notice.Details.Add(new NoticeDetails()
-            {
-                ApplicationUser = user,
-                NoticeId = id,
-                HitCount = 1
-            });
-        }
-        else
-        {
-            userExists.HitCount += 1;
-        }
-
-        await _dbContext.SaveChangesAsync();
-
-        return View(notice);
+        var result = await _noticeRepo.Details(id, uId);
+        
+        return View(result);
     }
 }

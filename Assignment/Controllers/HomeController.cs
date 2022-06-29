@@ -1,12 +1,13 @@
 ﻿using System.Diagnostics;
 using Assignment.Data;
+using Assignment.Data.Static;
 using Microsoft.AspNetCore.Mvc;
 using Assignment.Models;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Assignment.Controllers;
 
-[Authorize]
+
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
@@ -17,7 +18,7 @@ public class HomeController : Controller
         _logger = logger;
         _dbContext = dbContext;
     }
-
+    
     public IActionResult Index()
     {
         // var notice = _dbContext.Notices!
@@ -34,6 +35,8 @@ public class HomeController : Controller
             join noticeDetails in _dbContext.NoticeDetails
                 on notice.NoticeId equals noticeDetails.NoticeId
             select notice).ToList();
+        
+        seen = seen.OrderByDescending(x => x.NoticeId).ToList();
 
         var result = new List<Notice>();
         result.AddRange(unseen.DistinctBy(x=>x.NoticeId));
