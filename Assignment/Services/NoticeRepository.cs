@@ -16,6 +16,32 @@ public class NoticeRepository : INoticeRepository
     }
 
 
+    public async Task<List<Notice>> GetNoticeList()
+    {
+        // var notice = _dbContext.Notices!
+        //     .OrderByDescending(n => n.NoticeId)
+        //     .ToList();
+        
+        var unseen = (from notice in _dbContext.Notices
+            where !(from nd in _dbContext.NoticeDetails
+                    select nd.NoticeId)
+                .Contains(notice.NoticeId)
+            select notice).ToList();
+
+        var seen = (from notice in _dbContext.Notices
+            join noticeDetails in _dbContext.NoticeDetails
+                on notice.NoticeId equals noticeDetails.NoticeId
+            select notice).ToList();
+        
+        seen = seen.OrderByDescending(x => x.NoticeId).ToList();
+
+        var result = new List<Notice>();
+        result.AddRange(unseen.DistinctBy(x=>x.NoticeId));
+        result.AddRange(seen.DistinctBy(x=>x.NoticeId));
+
+        return  result;
+    }
+
     public async Task Create(Notice model)
     {
         _dbContext.Notices!.Add(model);

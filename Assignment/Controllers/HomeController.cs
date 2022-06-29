@@ -1,9 +1,7 @@
 ﻿using System.Diagnostics;
-using Assignment.Data;
-using Assignment.Data.Static;
 using Microsoft.AspNetCore.Mvc;
 using Assignment.Models;
-using Microsoft.AspNetCore.Authorization;
+using Assignment.Services.IRepository;
 
 namespace Assignment.Controllers;
 
@@ -11,36 +9,17 @@ namespace Assignment.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-    private readonly ApplicationDbContext _dbContext;
+    private readonly INoticeRepository _noticeRepo;
 
-    public HomeController(ILogger<HomeController> logger, ApplicationDbContext dbContext)
+    public HomeController(ILogger<HomeController> logger, INoticeRepository noticeRepo)
     {
         _logger = logger;
-        _dbContext = dbContext;
+        _noticeRepo = noticeRepo;
     }
     
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        // var notice = _dbContext.Notices!
-        //     .OrderByDescending(n => n.NoticeId)
-        //     .ToList();
-        
-        var unseen = (from notice in _dbContext.Notices
-            where !(from nd in _dbContext.NoticeDetails
-                    select nd.NoticeId)
-                .Contains(notice.NoticeId)
-            select notice).ToList();
-
-        var seen = (from notice in _dbContext.Notices
-            join noticeDetails in _dbContext.NoticeDetails
-                on notice.NoticeId equals noticeDetails.NoticeId
-            select notice).ToList();
-        
-        seen = seen.OrderByDescending(x => x.NoticeId).ToList();
-
-        var result = new List<Notice>();
-        result.AddRange(unseen.DistinctBy(x=>x.NoticeId));
-        result.AddRange(seen.DistinctBy(x=>x.NoticeId));
+        var result = await _noticeRepo.GetNoticeList();
         
         return View(result);
     }
