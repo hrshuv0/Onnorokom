@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Assignment.Data;
 using Assignment.Models;
+using Assignment.Models.ViewModels;
 using Assignment.Services.IRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -33,7 +34,12 @@ public class NoticeController : Controller
         if (!ModelState.IsValid)
             return View(model);
 
-        await _noticeRepo.Create(model);
+        var result =  await _noticeRepo.Create(model);
+
+        if (result.Status != Status.Success)
+        {
+            TempData["Error"] = result.Message;
+        }
 
         return RedirectToAction(nameof(Index), "Home");
     }

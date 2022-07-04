@@ -1,5 +1,6 @@
 using Assignment.Data;
 using Assignment.Models;
+using Assignment.Models.ViewModels;
 using Assignment.Services.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -39,14 +40,32 @@ public class NoticeRepository : INoticeRepository
         result.AddRange(unseen.DistinctBy(x=>x.NoticeId));
         result.AddRange(seen.DistinctBy(x=>x.NoticeId));
 
+        result = result.Where(x => x.PublishDate <= DateTime.Now).ToList();
+        
         return  result;
     }
 
-    public async Task Create(Notice model)
+    public async Task<ResponseVm> Create(Notice model)
     {
+
+        var isExists = await _dbContext.Notices.FirstOrDefaultAsync(x => x.Title == model.Title);
+
+        var response = new ResponseVm();
+        if (isExists is not null)
+        {
+            response.Message = "already exists";
+            response.Status = Status.Failed;
+
+            return response;
+        }
         _dbContext.Notices!.Add(model);
         await _dbContext.SaveChangesAsync();
         await Save();
+
+        response.Message = "notice created";
+        response.Status = Status.Success;
+
+        return response;
     }
 
     public async Task<Notice> Details(int id, string uId)
@@ -55,6 +74,8 @@ public class NoticeRepository : INoticeRepository
             .Include(s => s.Details)!
             .ThenInclude(t => t.ApplicationUser)
             .FirstOrDefault(x => x.NoticeId == id);
+
+        
         
         var user = _dbContext.Users.FirstOrDefault(x => x.Id == uId);
 

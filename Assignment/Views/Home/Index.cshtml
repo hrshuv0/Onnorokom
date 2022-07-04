@@ -11,6 +11,11 @@
     <div class="row">
         <h1 class="display-4">Onnorokom Notice</h1>
 
+        @if (TempData["Error"] is not null)
+        {
+            <div class="alert-danger alert">@TempData["Error"]</div>
+        }
+
         @if (User.IsInRole(UserRoles.Admin))
         {
             <div>
@@ -26,9 +31,14 @@
             <div class="row">
                 @foreach (var notice in Model)
                 {
+                    // 22 AUG, 2020 12:15 PM
                     <div class="card m-2 col-4" style="width: 18rem;height: 20rem;background-color: rgba(232,233,234,0.81)">
                         <div class="card-body">
                             <h4 class="card-title">@notice.Title</h4>
+                            @if (@notice.PublishDate != DateTime.MinValue)
+                            {
+                                <h5>@notice.PublishDate.ToString("D")</h5>
+                            }
                             <p class="card-text" style="height: 200px;overflow-y: hidden">@notice.Description</p>
                             <a asp-controller="Notice" asp-action="Details" asp-route-id="@notice.NoticeId" class="btn btn-outline-info text-dark">View</a>
                         </div>
@@ -47,12 +57,16 @@
                     <div class="mt-5 border border-secondary mx-5" style="background-color: rgba(224,220,220,0.81)">
                         <p>register new account or login with these credentials</p><hr class="mx-5"/>
                         As admin:
-                        <p>username= admin,
-                            password= 1234</p>
+                        <p>
+                            username= admin,
+                            password= 1234
+                        </p>
                         <br/>
                         As User:
-                        <p>username= user,
-                            password= 1234</p>
+                        <p>
+                            username= user,
+                            password= 1234
+                        </p>
                         <br/>
                     </div>
                 </div>

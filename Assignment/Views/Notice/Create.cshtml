@@ -8,6 +8,7 @@
     <div class="col-8 offset-2">
         <h2> Announce new notice</h2>
 
+
         <div class="row">
             <div class="col-8 offset-2">
                 <form asp-action="Create" method="post">
@@ -22,6 +23,11 @@
                         <label asp-for="Description" class="control-label"></label>
                         <textarea asp-for="Description" class="form-control"></textarea>
                         <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mt-2">
+                        <label asp-for="PublishDate" class="control-label"></label>
+                        <input asp-for="PublishDate" class="form-control"></input>
+                        <span asp-validation-for="PublishDate" class="text-danger"></span>
                     </div>
 
                     <div class="from-group mt-2">

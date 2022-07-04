@@ -13,5 +13,7 @@ public class Notice
     [Required]
     public string? Description { get; set; }
 
+    public DateTime PublishDate { get; set; }
+
     public List<NoticeDetails>? Details { get; set; }
 }
